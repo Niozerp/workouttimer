@@ -316,37 +316,42 @@ input[type="number"]::-webkit-inner-spin-button {
       
       function setRepTime(){
         const repsInputEl = document.getElementById("repsCount")
-
-        if(typeof parseInt(repsInputEl.value) == "number" && parseInt(repsInputEl.value)>1){
-          repTime = parseInt(repsInputEl.value);
-          quenchInputWrath(repsInputEl);
-        }else{
-          makeInputAngry(repsInputEl);
+        if(repsInputEl.value != ""){
+            if(typeof parseInt(repsInputEl.value) == "number" && parseInt(repsInputEl.value)>1){
+            repTime = parseInt(repsInputEl.value);
+            quenchInputWrath(repsInputEl);
+          }else{
+            makeInputAngry(repsInputEl);
+          }
         }
+
       }
 
       function setRestTime(){
         const restInputEl = document.getElementById("restCount")
-
-        if(typeof parseInt(restInputEl.value) == "number" && parseInt(restInputEl.value)>1){
-          restTime = parseInt(restInputEl.value);
-          quenchInputWrath(restInputEl);
-          timerEl.textContent = repTime.toString().padStart(2, '0');
-        }else{
-          makeInputAngry(restInputEl);
+        if(restInputEl.value != ""){
+          if(typeof parseInt(restInputEl.value) == "number" && parseInt(restInputEl.value)>1){
+            restTime = parseInt(restInputEl.value);
+            quenchInputWrath(restInputEl);
+            timerEl.textContent = repTime.toString().padStart(2, '0');
+          }else{
+            makeInputAngry(restInputEl);
+          }
         }
       }
 
       function setLimits(){
         const limitInputEl = document.getElementById("limitCount")
 
-        if(typeof parseInt(limitInputEl.value) == "number" && parseInt(limitInputEl.value)>1){
-          setLimit = parseInt(limitInputEl.value);
-          quenchInputWrath(limitInputEl);
-          const setLimitLableEl = document.getElementById("setLimitLabel");
-          setLimitLableEl.textContent = `Going To: ${setLimit}`;
-        }else{
-          makeInputAngry(limitInputEl);
+        if(limitInputEl.value != ""){
+          if(typeof parseInt(limitInputEl.value) == "number" && parseInt(limitInputEl.value)>1){
+            setLimit = parseInt(limitInputEl.value);
+            quenchInputWrath(limitInputEl);
+            const setLimitLableEl = document.getElementById("setLimitLabel");
+            setLimitLableEl.textContent = `Going To: ${setLimit}`;
+          }else{
+            makeInputAngry(limitInputEl);
+          }
         }
       }
     
