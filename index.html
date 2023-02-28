@@ -125,7 +125,7 @@
       timerEl.textContent = repTime.toString().padStart(2, '0');
 
       function start() {
-        if(sets==0){
+        if(!restMode){
           showNotification("rep time! at " + timeStamp());
         }
         
@@ -146,8 +146,15 @@
                 restMode = true;
                 showNotification("rest time! at " + timeStamp())
                 sets++
-                const setsEl = document.getElementById("setsLabel");
-                setsEl.textContent=`Sets: ${sets}`
+                if(sets<setLimit){
+                  const setsEl = document.getElementById("setsLabel");
+                  setsEl.textContent=`Sets: ${sets}`
+                }else{
+                  sets=0;
+                  showNotification("Next Exercise! at " + timeStamp());
+                  const setsEl = document.getElementById("setsLabel");
+                  setsEl.textContent=`Sets: ${sets}`
+                }
               }
               progress = 0;
 
