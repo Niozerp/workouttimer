@@ -105,7 +105,7 @@
         <span class="mdc-icon-button__ripple"></span>
       </button>
       <button class="mdc-icon-button" onclick="reset()">
-        <i class="material-icons mdc-icon-button__icon" aria-hidden="true">stop</i>
+        <i class="material-icons mdc-icon-button__icon" aria-hidden="true">refresh</i>
         <span class="mdc-icon-button__ripple"></span>
       </button>
     </div>
@@ -206,7 +206,6 @@
         const timezoneOffset = now.getTimezoneOffset(); // Convert minutes to milliseconds
         const localTime = now.getTime() - timezoneOffset;
         const localDate = new Date(localTime);
-        //const dateString = localDate.toLocaleDateString();
         const timeString = localDate.toLocaleTimeString('en-us', 'New Mexico');
         return timeString;
       }
