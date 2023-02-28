@@ -24,6 +24,16 @@
         background-color: #d0afff;
       }
 
+      #mainApp{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 65vh;
+        justify-content: space-around;
+        margin: 0;
+        padding: 0;
+      }
+
       .timer-container {
         width: 200px;
         height: 200px;
@@ -84,29 +94,111 @@
         background-color: #f2d4cb;
         z-index: 2;
       }
+
+      .menu{
+        background-color: rgb(99, 99, 231);
+        border-radius: 25px;
+        border: 5px solid white;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        width: 50px;
+        height: fit-content;
+        margin-top: 5px;
+        position: absolute;
+        left: 25%;
+        top: 25%;
+      }
+
+      #settings{
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        min-height: 35vh;
+        justify-content: space-around;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Material UI input field */
+.input-field {
+  border: 3px solid transparent;
+  font-size: 1rem;
+  padding: 10px 0;
+  margin: 10px 0;
+  background-color: #fff;
+  transition: border-bottom-color 0.3s ease-in-out;
+  border-radius: 7px;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  width: 50px;
+  text-align: center;
+}
+
+.input-field:focus {
+  outline: none;
+  border-bottom-color: #6200ee;
+}
+
+.angry-input{
+  border-bottom-color: red;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  margin: 0;
+}
+
     </style>
   </head>
 
   <body>
-    <div class="timer-container">
-      <p class="timer" id="timer">45</p>
-      <div class="cirlce"></div>
-      <div class="progress" id="progress"></div>
+    
+    <div id="mainApp">
+      <div class="timer-container">
+        <p class="timer" id="timer">45</p>
+        <div class="cirlce"></div>
+        <div class="progress" id="progress"></div>
+      </div>
+      <div>
+        <h1 id="setsLabel">Sets: 0</h1>
+        <h1 id="setLimitLabel">Going To: 4</h1>
+      </div>
+      <div class="buttons">
+        <button class="mdc-icon-button" onclick="start()">
+          <i class="material-icons mdc-icon-button__icon" aria-hidden="true">play_arrow</i>
+          <span class="mdc-icon-button__ripple"></span>
+        </button>
+        <button class="mdc-icon-button" onclick="pause()">
+          <i class="material-icons mdc-icon-button__icon" aria-hidden="true">pause</i>
+          <span class="mdc-icon-button__ripple"></span>
+        </button>
+        <button class="mdc-icon-button" onclick="reset()">
+          <i class="material-icons mdc-icon-button__icon" aria-hidden="true">refresh</i>
+          <span class="mdc-icon-button__ripple"></span>
+        </button>
+      </div>
     </div>
-    <div>
-      <h1 id="setsLabel">Sets: 0</h1>
-    </div>
-    <div class="buttons">
-      <button class="mdc-icon-button" onclick="start()">
-        <i class="material-icons mdc-icon-button__icon" aria-hidden="true">play_arrow</i>
+    
+    <div id="menu" class="menu">
+      <button class="mdc-icon-button" onclick="toggleSettings()">
+        <i class="material-icons mdc-icon-button__icon" aria-hidden="true">settings</i>
         <span class="mdc-icon-button__ripple"></span>
       </button>
-      <button class="mdc-icon-button" onclick="pause()">
-        <i class="material-icons mdc-icon-button__icon" aria-hidden="true">pause</i>
-        <span class="mdc-icon-button__ripple"></span>
-      </button>
-      <button class="mdc-icon-button" onclick="reset()">
-        <i class="material-icons mdc-icon-button__icon" aria-hidden="true">refresh</i>
+    </div>
+
+    <div id="settings">
+      <h1>Settings</h1>
+      <label>Seconds To Complete Reps:</label>
+      <input id="repsCount" class="input-field" type="number" placeholder="45" onblur="setRepTime()"/>
+      <label>Seconds To Rest:</label>
+      <input id="restCount" class="input-field" type="number" placeholder="30" onblur="setRestTime()"/>
+      <label>Number of Sets Between Exercises:</label>
+      <input id="limitCount" class="input-field" type="number" placeholder="4" onblur="setLimits()"/>
+      <button class="mdc-icon-button" onclick="setAll()">
+        <i class="material-icons mdc-icon-button__icon" aria-hidden="true">check</i>
         <span class="mdc-icon-button__ripple"></span>
       </button>
     </div>
@@ -114,16 +206,18 @@
     <script>
       const timerEl = document.getElementById('timer');
       const progressCircleEl = document.querySelector('.progress-circle');
+      const setLimitLableEl = document.getElementById("setLimitLabel");
 
       let timer;
       let progress;
       let restMode = false;
       let sets = 0;
       let setLimit = 4;
-      let repTime = 45;
-      let restTime = 30;
+      let repTime = 5;
+      let restTime = 3;
 
       timerEl.textContent = repTime.toString().padStart(2, '0');
+      setLimitLableEl.textContent = `Going To: ${setLimit}`;
 
       function start() {
         if(!restMode){
@@ -141,7 +235,6 @@
               if (restMode) {
                 timerEl.textContent = repTime.toString().padStart(2, '0');
                 restMode = false;
-                showNotification("rep time! at " + timeStamp())
               } else {
                 timerEl.textContent = restTime.toString().padStart(2, '0');
                 restMode = true;
@@ -216,9 +309,86 @@
         const timezoneOffset = now.getTimezoneOffset(); // Convert minutes to milliseconds
         const localTime = now.getTime() - timezoneOffset;
         const localDate = new Date(localTime);
+        //const dateString = localDate.toLocaleDateString();
         const timeString = localDate.toLocaleTimeString('en-us', 'New Mexico');
         return timeString;
       }
+      
+      function setRepTime(){
+        const repsInputEl = document.getElementById("repsCount")
+
+        if(typeof parseInt(repsInputEl.value) == "number" && parseInt(repsInputEl.value)>1){
+          repTime = parseInt(repsInputEl.value);
+          quenchInputWrath(repsInputEl);
+        }else{
+          makeInputAngry(repsInputEl);
+        }
+      }
+
+      function setRestTime(){
+        const restInputEl = document.getElementById("restCount")
+
+        if(typeof parseInt(restInputEl.value) == "number" && parseInt(restInputEl.value)>1){
+          restTime = parseInt(restInputEl.value);
+          quenchInputWrath(restInputEl);
+          timerEl.textContent = repTime.toString().padStart(2, '0');
+        }else{
+          makeInputAngry(restInputEl);
+        }
+      }
+
+      function setLimits(){
+        const limitInputEl = document.getElementById("limitCount")
+
+        if(typeof parseInt(limitInputEl.value) == "number" && parseInt(limitInputEl.value)>1){
+          setLimit = parseInt(limitInputEl.value);
+          quenchInputWrath(limitInputEl);
+          const setLimitLableEl = document.getElementById("setLimitLabel");
+          setLimitLableEl.textContent = `Going To: ${setLimit}`;
+        }else{
+          makeInputAngry(limitInputEl);
+        }
+      }
+    
+
+      function toggleSettings(){
+        const mainAppEl = document.getElementById("mainApp");
+        const settingsEl = document.getElementById("settings");
+
+        if(mainAppEl.style.display!="none"){
+          mainAppEl.style.display = "none";
+          settingsEl.style.display = "flex";
+        }else{
+          settingsEl.style.display = "none";
+          mainAppEl.style.display="flex"
+        }
+      }
+
+      function makeInputAngry(input){
+        if(!input.classList.contains("angry-input")){
+          input.classList.add("angry-input");
+        }
+      }
+
+      function quenchInputWrath(input){
+        if(input.classList.contains("angry-input")){
+          input.classList.remove("angry-input");
+        }
+      }
+
+      function purgeAngryInputs(){
+        const angryInputs = document.querySelectorAll("angry-input");
+        for(var input of angryInputs){
+          input.classList.remove("angry-input");
+        }
+      }
+
+      function setAll(){
+        setRepTime();
+        setRestTime();
+        setLimits();
+      }
+    
     </script>
   </body>
 </html>
