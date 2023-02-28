@@ -264,7 +264,7 @@ input[type="number"]::-webkit-inner-spin-button {
       }
 
       function reset() {
-        timerEl.textContent = repTime;
+        timerEl.textContent = repTime.toString().padStart(2, '0');
         progress = 0;
         clearInterval(timer);
         timer = undefined;
