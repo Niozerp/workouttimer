@@ -293,6 +293,7 @@ input[type="number"]::-webkit-inner-spin-button {
       }
 
       function showNotification(notiText) {
+        playBonk();
         if (Notification.permission == 'granted') {
           new Notification(notiText);
         } else if (Notification.permission != 'denied') {
@@ -392,6 +393,11 @@ input[type="number"]::-webkit-inner-spin-button {
         setRepTime();
         setRestTime();
         setLimits();
+      }
+
+      function playBonk(){
+        const audio = new Audio('/resources/Bonk - Sound Effect.mp3');
+        audio.play();
       }
     
     </script>
