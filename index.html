@@ -91,8 +91,12 @@
         top: 0;
         left: 0;
         clip: rect(200px, 200px, 200px, 0);
-        background-color: #f2d4cb;
+        background-color: #82e086;
         z-index: 2;
+      }
+
+      .resting{
+        background-color: rgb(111, 36, 120);
       }
 
       .menu{
@@ -278,8 +282,10 @@ input[type="number"]::-webkit-inner-spin-button {
 
         if(restMode){
           timerStartPoint = restTime;
+          progressEl.classList.add('resting');
         }else {
           timerStartPoint = repTime;
+          progressEl.classList.remove('resting');
         }
 
         var increment = progressEl.clientHeight / timerStartPoint;
